@@ -1,26 +1,29 @@
-import { AppShell } from "@/components/crm/app-shell"
-import { KpiCards } from "@/components/crm/kpi-cards"
-import { RevenueChart, MessagesChart } from "@/components/crm/charts"
-import { FunnelOverview } from "@/components/crm/funnel-overview"
-import { RecentLeads } from "@/components/crm/recent-leads"
+import { Navbar } from "@/components/landing/navbar"
+import { Hero } from "@/components/landing/hero"
+import { Stats } from "@/components/landing/stats"
+import { Features } from "@/components/landing/features"
+import { Showcase } from "@/components/landing/showcase"
+import { Steps } from "@/components/landing/steps"
+import { Testimonials } from "@/components/landing/testimonials"
+import { Pricing } from "@/components/landing/pricing"
+import { CTA } from "@/components/landing/cta"
+import { Footer } from "@/components/landing/footer"
 
-export default function DashboardPage() {
+export default function LandingPage() {
   return (
-    <AppShell
-      title="Dashboard"
-      subtitle="Visão geral das suas vendas no WhatsApp"
-    >
-      <div className="flex flex-col gap-4 md:gap-6">
-        <KpiCards />
-        <div className="grid grid-cols-1 gap-4 md:gap-6 lg:grid-cols-2">
-          <RevenueChart />
-          <MessagesChart />
-        </div>
-        <div className="grid grid-cols-1 gap-4 md:gap-6 lg:grid-cols-2">
-          <FunnelOverview />
-          <RecentLeads />
-        </div>
-      </div>
-    </AppShell>
+    <div className="min-h-screen bg-background">
+      <Navbar />
+      <main>
+        <Hero />
+        <Stats />
+        <Features />
+        <Showcase />
+        <Steps />
+        <Testimonials />
+        <Pricing />
+        <CTA />
+      </main>
+      <Footer />
+    </div>
   )
 }

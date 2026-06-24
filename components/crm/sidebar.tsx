@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils"
 import { leads } from "@/lib/mock-data"
 
 const nav = [
-  { href: "/", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/funil", label: "Funil de vendas", icon: KanbanSquare },
   { href: "/contatos", label: "Contatos", icon: Users },
   { href: "/inbox", label: "Inbox", icon: MessageCircle },
