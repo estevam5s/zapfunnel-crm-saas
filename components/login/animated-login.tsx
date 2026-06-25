@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Eye, EyeOff, Mail, Zap } from "lucide-react"
+import { useAuth } from "@/contexts/auth-context"
 
 interface PupilProps {
   size?: number
@@ -144,6 +145,8 @@ const EyeBall = ({
 
 export function AnimatedLogin() {
   const router = useRouter()
+  const { signIn, signUp } = useAuth()
+  const [mode, setMode] = useState<"login" | "signup">("login")
   const [showPassword, setShowPassword] = useState(false)
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -249,18 +252,33 @@ export function AnimatedLogin() {
   const yellowPos = calculatePosition(yellowRef)
   const greenPos = calculatePosition(greenRef)
 
+  const ADMIN_EMAILS = (process.env.NEXT_PUBLIC_ADMIN_EMAILS || "").split(",").map((s) => s.trim().toLowerCase())
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError("")
-    setIsLoading(true)
-    await new Promise((resolve) => setTimeout(resolve, 400))
-    // Autenticação simulada (integração real do backend virá depois)
-    if (email && password.length >= 4) {
-      router.push("/dashboard")
-    } else {
-      setError("E-mail ou senha inválidos. Tente novamente.")
-      setIsLoading(false)
+    if (password.length < 6) {
+      setError("A senha precisa ter ao menos 6 caracteres.")
+      return
     }
+    setIsLoading(true)
+    const { error } =
+      mode === "login"
+        ? await signIn(email, password)
+        : await signUp(email, password, email.split("@")[0])
+    if (error) {
+      setError(
+        error.message?.includes("Invalid login")
+          ? "E-mail ou senha incorretos."
+          : error.message?.includes("already registered")
+            ? "Este e-mail já tem conta. Faça login."
+            : error.message || "Não foi possível autenticar.",
+      )
+      setIsLoading(false)
+      return
+    }
+    const isAdmin = ADMIN_EMAILS.includes(email.trim().toLowerCase())
+    router.push(isAdmin ? "/admin" : "/dashboard")
   }
 
   return (
@@ -557,8 +575,8 @@ export function AnimatedLogin() {
           </Link>
 
           <div className="text-center mb-10">
-            <h1 className="text-3xl font-bold tracking-tight mb-2 text-balance">Bem-vindo de volta!</h1>
-            <p className="text-muted-foreground text-sm">Entre com seus dados para acessar o painel</p>
+            <h1 className="text-3xl font-bold tracking-tight mb-2 text-balance">{mode === "login" ? "Bem-vindo de volta!" : "Crie sua conta"}</h1>
+            <p className="text-muted-foreground text-sm">{mode === "login" ? "Entre com seus dados para acessar o painel" : "7 dias grátis no nível Pro, sem cartão"}</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
@@ -624,7 +642,7 @@ export function AnimatedLogin() {
             )}
 
             <Button type="submit" className="w-full h-12 text-base font-medium" size="lg" disabled={isLoading}>
-              {isLoading ? "Entrando..." : "Entrar"}
+              {isLoading ? "Aguarde..." : mode === "login" ? "Entrar" : "Criar conta grátis"}
             </Button>
           </form>
 
@@ -640,10 +658,14 @@ export function AnimatedLogin() {
           </div>
 
           <div className="text-center text-sm text-muted-foreground mt-8">
-            Ainda não tem uma conta?{" "}
-            <Link href="#" className="text-foreground font-medium hover:underline">
-              Criar conta grátis
-            </Link>
+            {mode === "login" ? "Ainda não tem uma conta? " : "Já tem uma conta? "}
+            <button
+              type="button"
+              onClick={() => { setMode(mode === "login" ? "signup" : "login"); setError("") }}
+              className="text-foreground font-medium hover:underline"
+            >
+              {mode === "login" ? "Criar conta grátis" : "Entrar"}
+            </button>
           </div>
         </div>
       </div>

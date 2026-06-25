@@ -7,6 +7,11 @@ import {
   Boxes,
   Wallet,
   Globe,
+  Users,
+  Tag,
+  ScrollText,
+  Search,
+  KeyRound,
   ArrowLeft,
   ShieldCheck,
 } from "lucide-react"
@@ -17,7 +22,12 @@ export const adminNav = [
   { href: "/admin", label: "Visão geral", icon: LayoutDashboard },
   { href: "/admin/produtos", label: "Produtos SaaS", icon: Boxes },
   { href: "/admin/financeiro", label: "Financeiro", icon: Wallet },
+  { href: "/admin/usuarios", label: "Usuários & clientes", icon: Users },
+  { href: "/admin/promocoes", label: "Promoções", icon: Tag },
   { href: "/admin/monitoramento", label: "Visitantes & monitoramento", icon: Globe },
+  { href: "/admin/logs", label: "Logs & auditoria", icon: ScrollText },
+  { href: "/admin/seo", label: "SEO", icon: Search },
+  { href: "/admin/sistema", label: "API & backup", icon: KeyRound },
 ]
 
 export function AdminSidebar() {

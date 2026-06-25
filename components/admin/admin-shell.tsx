@@ -28,7 +28,7 @@ export function AdminShell({
       </div>
 
       <nav className="fixed inset-x-0 bottom-0 z-30 flex border-t border-border bg-sidebar/95 backdrop-blur md:hidden">
-        {adminNav.map((item) => {
+        {adminNav.slice(0, 5).map((item) => {
           const active =
             item.href === "/admin"
               ? pathname === "/admin"
