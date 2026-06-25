@@ -13,6 +13,7 @@
     "@vercel/analytics": "1.6.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "d3-geo": "^3.1.1",
     "lucide-react": "^1.16.0",
     "motion": "^12.41.0",
     "next": "16.2.6",
@@ -20,6 +21,7 @@
     "react": "^19",
     "react-dom": "^19",
     "react-qr-code": "^2.2.0",
+    "react-simple-maps": "^3.0.0",
     "recharts": "^3.9.0",
     "shadcn": "^4.8.0",
     "tailwind-merge": "^3.3.1",
@@ -27,10 +29,12 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.2.0",
+    "@types/d3-geo": "^3.1.0",
     "@types/node": "^24",
     "@types/qrcode": "^1.5.6",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/react-simple-maps": "^3.0.6",
     "postcss": "^8.5",
     "tailwindcss": "^4.2.0",
     "typescript": "5.7.3"
