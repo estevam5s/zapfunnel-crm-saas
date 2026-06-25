@@ -1,15 +1,33 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { motion } from "motion/react"
-import { ArrowRight, MessageCircle, CheckCheck, Sparkles } from "lucide-react"
+import { ArrowRight, MessageCircle, CheckCheck, Sparkles, Star } from "lucide-react"
 import { brl } from "@/lib/mock-data"
 
 const ease = [0.21, 0.47, 0.32, 0.98] as const
 
+const avatars = [
+  { src: "/avatars/sales-1.png", alt: "Cliente ZapFunnel" },
+  { src: "/avatars/sales-2.png", alt: "Cliente ZapFunnel" },
+  { src: "/avatars/sales-3.png", alt: "Cliente ZapFunnel" },
+  { src: "/avatars/sales-4.png", alt: "Cliente ZapFunnel" },
+  { src: "/avatars/sales-5.png", alt: "Cliente ZapFunnel" },
+]
+
+const marqueeStats = [
+  { value: "+38%", label: "de conversão no funil" },
+  { value: "3x", label: "mais rápido para responder" },
+  { value: "R$ 12M+", label: "em vendas rastreadas" },
+  { value: "2.500+", label: "times de vendas ativos" },
+  { value: "1min", label: "tempo médio de resposta" },
+  { value: "99,9%", label: "de uptime garantido" },
+]
+
 export function Hero() {
   return (
-    <section className="relative overflow-hidden pt-32 pb-20 sm:pt-40 sm:pb-28">
+    <section className="relative overflow-hidden pt-32 pb-16 sm:pt-40 sm:pb-24">
       {/* glow background */}
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute left-1/2 top-[-10%] h-[520px] w-[820px] -translate-x-1/2 rounded-full bg-primary/25 blur-[120px]" />
@@ -47,7 +65,24 @@ export function Hero() {
             className="mt-6 text-balance text-4xl font-semibold leading-[1.05] tracking-tight sm:text-6xl"
           >
             Transforme conversas do{" "}
-            <span className="text-primary">WhatsApp</span> em vendas previsíveis
+            <span className="text-primary">WhatsApp</span> em vendas{" "}
+            <span className="relative whitespace-nowrap text-primary">
+              previsíveis
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 300 12"
+                className="absolute -bottom-1.5 left-0 h-2.5 w-full text-primary/50"
+                preserveAspectRatio="none"
+              >
+                <path
+                  d="M2 9C70 3 230 3 298 9"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </span>
           </motion.h1>
 
           <motion.p
@@ -82,19 +117,78 @@ export function Hero() {
             </a>
           </motion.div>
 
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.44 }}
-            className="mt-4 text-xs text-muted-foreground"
+          {/* social proof */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.44, ease }}
+            className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row"
           >
-            14 dias grátis · Sem cartão de crédito · Cancele quando quiser
-          </motion.p>
+            <div className="flex -space-x-3">
+              {avatars.map((a) => (
+                <span
+                  key={a.src}
+                  className="relative inline-block size-10 overflow-hidden rounded-full border-2 border-background bg-secondary ring-1 ring-primary/30"
+                >
+                  <Image
+                    src={a.src || "/placeholder.svg"}
+                    alt={a.alt}
+                    fill
+                    sizes="40px"
+                    className="object-cover"
+                  />
+                </span>
+              ))}
+            </div>
+            <div className="flex flex-col items-center gap-0.5 sm:items-start">
+              <div className="flex items-center gap-0.5 text-primary">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Star key={i} className="size-3.5 fill-current" />
+                ))}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                <span className="font-semibold text-foreground">+2.500 times</span>{" "}
+                vendem mais com o ZapFunnel
+              </p>
+            </div>
+          </motion.div>
         </div>
 
         <HeroMockup />
       </div>
+
+      <StatsMarquee />
     </section>
+  )
+}
+
+function StatsMarquee() {
+  const items = [...marqueeStats, ...marqueeStats]
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.8, delay: 0.6 }}
+      className="group/marquee relative mt-16 flex overflow-hidden border-y border-border bg-card/40 py-4 backdrop-blur-sm"
+      style={{ ["--marquee-gap" as string]: "3rem", ["--marquee-duration" as string]: "40s" }}
+    >
+      <div className="flex shrink-0 animate-marquee items-center gap-12 pr-12">
+        {items.map((stat, i) => (
+          <div key={i} className="flex items-center gap-3 whitespace-nowrap">
+            <span className="font-mono text-base font-bold tracking-tight text-primary">
+              {stat.value}
+            </span>
+            <span className="text-sm font-medium uppercase tracking-[0.12em] text-muted-foreground">
+              {stat.label}
+            </span>
+            <span className="ml-3 size-1.5 rounded-full bg-primary/40" />
+          </div>
+        ))}
+      </div>
+      {/* edge fades */}
+      <div className="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-background to-transparent" />
+      <div className="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-background to-transparent" />
+    </motion.div>
   )
 }
 
