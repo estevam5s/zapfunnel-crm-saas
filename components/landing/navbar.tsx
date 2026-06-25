@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import { Zap, Menu, X } from "lucide-react"
+import { Menu, X } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { Logo } from "@/components/brand/logo"
 
 const links = [
   { href: "#recursos", label: "Recursos" },
@@ -33,11 +34,8 @@ export function Navbar() {
       )}
     >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <Link href="/" className="flex items-center gap-2.5">
-          <span className="flex size-9 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-lg shadow-primary/30">
-            <Zap className="size-5" />
-          </span>
-          <span className="text-base font-semibold tracking-tight">ZapFunnel</span>
+        <Link href="/">
+          <Logo />
         </Link>
 
         <nav className="hidden items-center gap-1 md:flex">

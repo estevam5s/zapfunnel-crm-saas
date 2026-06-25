@@ -269,6 +269,86 @@ export const messageSeries = [
   { hour: "20h", enviadas: 38, recebidas: 44 },
 ]
 
+// Conversion funnel for reports
+export const funnelData = [
+  { stage: "Leads", value: 1240 },
+  { stage: "Em conversa", value: 820 },
+  { stage: "Qualificados", value: 410 },
+  { stage: "Negociação", value: 220 },
+  { stage: "Ganhos", value: 96 },
+]
+
+export const sourceData = [
+  { source: "WhatsApp", value: 540 },
+  { source: "Instagram", value: 280 },
+  { source: "Anúncio", value: 210 },
+  { source: "Indicação", value: 130 },
+  { source: "Site", value: 80 },
+]
+
+export const monthlyRevenue = [
+  { month: "Jan", receita: 38000, meta: 35000 },
+  { month: "Fev", receita: 42000, meta: 38000 },
+  { month: "Mar", receita: 39500, meta: 40000 },
+  { month: "Abr", receita: 51000, meta: 42000 },
+  { month: "Mai", receita: 58000, meta: 48000 },
+  { month: "Jun", receita: 64000, meta: 52000 },
+  { month: "Jul", receita: 61000, meta: 56000 },
+  { month: "Ago", receita: 72000, meta: 60000 },
+]
+
+export type Notification = {
+  id: string
+  type: "lead" | "message" | "deal" | "system"
+  title: string
+  description: string
+  time: string
+  read: boolean
+}
+
+export const notificationsSeed: Notification[] = [
+  {
+    id: "n1",
+    type: "lead",
+    title: "Novo lead recebido",
+    description: "Camila Rocha entrou pelo WhatsApp.",
+    time: "há 4 min",
+    read: false,
+  },
+  {
+    id: "n2",
+    type: "message",
+    title: "5 mensagens não lidas",
+    description: "Camila Rocha está aguardando resposta.",
+    time: "há 12 min",
+    read: false,
+  },
+  {
+    id: "n3",
+    type: "deal",
+    title: "Negócio ganho",
+    description: "Lucas Pereira fechou o plano Pro (R$ 5.600).",
+    time: "há 25 min",
+    read: false,
+  },
+  {
+    id: "n4",
+    type: "deal",
+    title: "Negócio em negociação",
+    description: "Mariana Lopes avançou para Negociação.",
+    time: "há 1 h",
+    read: true,
+  },
+  {
+    id: "n5",
+    type: "system",
+    title: "Limite de números",
+    description: "Você usou 3 de 5 números do plano Pro.",
+    time: "há 3 h",
+    read: true,
+  },
+]
+
 export type ChatMessage = {
   id: string
   from: "me" | "them"

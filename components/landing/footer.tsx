@@ -1,6 +1,7 @@
 import type { SVGProps } from "react"
 import Link from "next/link"
-import { Zap, Apple, Play } from "lucide-react"
+import { Apple, Play } from "lucide-react"
+import { Logo } from "@/components/brand/logo"
 
 function InstagramIcon(props: SVGProps<SVGSVGElement>) {
   return (
@@ -130,13 +131,8 @@ export function Footer() {
         {/* brand + columns */}
         <div className="grid gap-10 py-14 lg:grid-cols-[1.4fr_repeat(4,1fr)]">
           <div>
-            <Link href="/" className="flex items-center gap-2.5">
-              <span className="flex size-9 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-lg shadow-primary/30">
-                <Zap className="size-5" />
-              </span>
-              <span className="text-base font-semibold tracking-tight">
-                ZapFunnel
-              </span>
+            <Link href="/">
+              <Logo />
             </Link>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground text-pretty">
               O CRM de vendas feito para o WhatsApp. Organize conversas, gerencie
