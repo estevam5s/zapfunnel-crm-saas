@@ -1,5 +1,6 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
@@ -31,12 +32,17 @@ export function AppShell({
   noPadding?: boolean
 }) {
   const pathname = usePathname()
+  const [collapsed, setCollapsed] = useState(false)
+  useEffect(() => { setCollapsed(localStorage.getItem("zf-sidebar-collapsed") === "1") }, [])
+  function toggle() { setCollapsed((c) => { localStorage.setItem("zf-sidebar-collapsed", c ? "0" : "1"); return !c }) }
 
   return (
     <div className="flex h-dvh overflow-hidden bg-background">
-      <Sidebar />
+      <div className={cn("transition-all duration-200 ease-in-out", collapsed && "md:-ml-64 lg:-ml-72 md:opacity-0")}>
+        <Sidebar />
+      </div>
       <div className="flex min-w-0 flex-1 flex-col">
-        <Topbar title={title} subtitle={subtitle} />
+        <Topbar title={title} subtitle={subtitle} onToggleSidebar={toggle} sidebarCollapsed={collapsed} />
         <main
           className={cn(
             "flex-1 overflow-auto pb-20 md:pb-0",

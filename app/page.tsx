@@ -8,10 +8,12 @@ import { Testimonials } from "@/components/landing/testimonials"
 import { Pricing } from "@/components/landing/pricing"
 import { CTA } from "@/components/landing/cta"
 import { Footer } from "@/components/landing/footer"
+import { ScrollFX } from "@/components/landing/scroll-fx"
 
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-background">
+      <ScrollFX />
       <Navbar />
       <main>
         <Hero />

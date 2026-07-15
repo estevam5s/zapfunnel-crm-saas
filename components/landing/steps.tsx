@@ -4,7 +4,7 @@ const steps = [
   {
     n: "01",
     title: "Conecte seu WhatsApp",
-    desc: "Integre seu número em minutos com a API oficial. Suas conversas começam a sincronizar automaticamente.",
+    desc: "Leia o QR Code e vincule seu número em segundos. Suas conversas começam a sincronizar automaticamente.",
   },
   {
     n: "02",

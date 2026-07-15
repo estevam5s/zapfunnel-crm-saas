@@ -10,7 +10,16 @@ import {
   Check,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { notificationsSeed, type Notification } from "@/lib/mock-data"
+import { authFetch } from "@/contexts/auth-context"
+
+type Notification = {
+  id: string
+  type: "lead" | "message" | "deal" | "system"
+  title: string
+  description: string
+  time: string
+  read: boolean
+}
 
 const iconByType = {
   lead: UserPlus,
@@ -26,10 +35,44 @@ const colorByType = {
   system: "text-[var(--chart-4)] bg-[var(--chart-4)]/15",
 } as const
 
+function hhmm(iso: string) {
+  try { return new Date(iso).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }) } catch { return "" }
+}
+
 export function NotificationsMenu() {
   const [open, setOpen] = useState(false)
-  const [items, setItems] = useState<Notification[]>(notificationsSeed)
+  const [items, setItems] = useState<Notification[]>([])
   const ref = useRef<HTMLDivElement>(null)
+
+  // Notificações reais: derivadas das conversas com mensagens não lidas.
+  // Sem WhatsApp conectado / sem conversas → lista vazia ("Tudo em dia").
+  useEffect(() => {
+    let alive = true
+    async function load() {
+      try {
+        const r = await authFetch("/api/conversations")
+        if (!r.ok) return
+        const { conversations } = await r.json()
+        const notifs: Notification[] = (conversations || [])
+          .filter((c: any) => (c.unread || 0) > 0)
+          .slice(0, 12)
+          .map((c: any) => ({
+            id: c.id,
+            type: "message" as const,
+            title: c.contact?.name || c.contact?.phone || "Nova conversa",
+            description: c.last_message || "Nova mensagem recebida",
+            time: hhmm(c.last_message_at),
+            read: false,
+          }))
+        if (alive) setItems(notifs)
+      } catch {
+        /* silencioso */
+      }
+    }
+    load()
+    const t = setInterval(load, 20000)
+    return () => { alive = false; clearInterval(t) }
+  }, [])
 
   const unread = items.filter((n) => !n.read).length
 

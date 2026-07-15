@@ -14,6 +14,7 @@ export type SubData = {
 interface AuthCtx {
   user: any; loading: boolean; sub: SubData | null; isAdmin: boolean; hasAccess: boolean
   signIn: (e: string, p: string) => Promise<{ error: any }>
+  signInWithGoogle: () => Promise<{ error: any }>
   signUp: (e: string, p: string, name: string) => Promise<{ error: any }>
   signOut: () => Promise<void>; reload: () => Promise<void>
 }
@@ -23,12 +24,15 @@ const Ctx = createContext<AuthCtx | undefined>(undefined)
 export async function authFetch(path: string, init: RequestInit = {}) {
   const { data } = await supabase.auth.getSession()
   const token = data.session?.access_token
+  // NÃO forçar Content-Type quando o body é FormData/Blob — o browser precisa
+  // definir o boundary do multipart/form-data (senão o upload de avatar dá 400).
+  const isForm = typeof FormData !== "undefined" && init.body instanceof FormData
   return fetch(path, {
     ...init,
     headers: {
       ...(init.headers || {}),
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...(init.body ? { "Content-Type": "application/json" } : {}),
+      ...(init.body && !isForm ? { "Content-Type": "application/json" } : {}),
     },
   })
 }
@@ -57,6 +61,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (!error) await loadSub()
     return { error }
   }
+
+  const signInWithGoogle = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({ provider: "google", options: { redirectTo: `${window.location.origin}/dashboard` } })
+    return { error }
+  }
   const signUp = async (email: string, password: string, full_name: string) => {
     const { data, error } = await supabase.auth.signUp({ email, password, options: { data: { full_name } } })
     if (error) return { error }
@@ -69,7 +78,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const hasAccess = isAdmin || !!sub?.has_access
 
   return (
-    <Ctx.Provider value={{ user, loading, sub, isAdmin, hasAccess, signIn, signUp, signOut, reload: loadSub }}>
+    <Ctx.Provider value={{ user, loading, sub, isAdmin, hasAccess, signIn, signInWithGoogle, signUp, signOut, reload: loadSub }}>
       {children}
     </Ctx.Provider>
   )

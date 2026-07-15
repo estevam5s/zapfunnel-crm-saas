@@ -327,7 +327,7 @@ export const notificationsSeed: Notification[] = [
     id: "n3",
     type: "deal",
     title: "Negócio ganho",
-    description: "Lucas Pereira fechou o plano Pro (R$ 5.600).",
+    description: "Lucas Pereira fechou o plano Pro (R$ 197/mês).",
     time: "há 25 min",
     read: false,
   },
@@ -366,7 +366,7 @@ export const conversations: Record<string, ChatMessage[]> = {
     { id: "m1", from: "them", text: "Oi! Vi o anúncio de vocês, queria saber mais sobre o plano Pro.", time: "09:12" },
     { id: "m2", from: "me", text: "Olá, Mariana! Claro. O plano Pro inclui automações e atendimento ilimitado. Posso te enviar uma proposta?", time: "09:14" },
     { id: "m3", from: "them", text: "Pode sim! Qual o valor mensal?", time: "09:15" },
-    { id: "m4", from: "me", text: "Fica R$ 480/mês com 14 dias de teste grátis. Quer que eu já libere o teste?", time: "09:16" },
+    { id: "m4", from: "me", text: "Fica R$ 197/mês com 14 dias de teste grátis. Quer que eu já libere o teste?", time: "09:16" },
     { id: "m5", from: "them", text: "Quero! Vou avaliar com o time aqui.", time: "09:18" },
   ],
   "3": [

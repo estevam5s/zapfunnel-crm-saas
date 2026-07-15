@@ -7,7 +7,8 @@ import { useAuth, authFetch } from "@/contexts/auth-context"
 import { cn } from "@/lib/utils"
 
 function brl(cents: number) {
-  return cents.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 })
+  // os valores em app_plans estão em CENTAVOS (ex.: 19700 = R$197)
+  return (cents / 100).toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 })
 }
 
 export default function GerenciarPlanoPage() {
@@ -49,7 +50,7 @@ export default function GerenciarPlanoPage() {
 
   return (
     <AppShell title="Gerenciar plano" subtitle="Sua assinatura, uso e faturamento">
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-6">
+      <div className="flex w-full flex-col gap-6">
         {notice && <div className="rounded-xl border border-primary/40 bg-primary/10 px-4 py-3 text-sm text-primary">{notice}</div>}
 
         <div className="rounded-2xl border border-primary/40 bg-gradient-to-br from-primary/10 to-accent/10 p-6">

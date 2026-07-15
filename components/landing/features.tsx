@@ -1,8 +1,8 @@
 import {
   KanbanSquare,
   MessageCircle,
-  Bot,
-  BarChart3,
+  Megaphone,
+  Workflow,
   Users,
   Zap,
 } from "lucide-react"
@@ -10,38 +10,38 @@ import { Reveal, RevealGroup, RevealItem } from "./reveal"
 
 const features = [
   {
-    icon: KanbanSquare,
-    title: "Funil de vendas visual",
-    desc: "Arraste e solte leads entre as etapas. Veja em segundos onde cada negócio está e o que falta para fechar.",
-    className: "lg:col-span-2",
-    highlight: true,
-  },
-  {
     icon: MessageCircle,
-    title: "Inbox unificado",
-    desc: "Todas as conversas do WhatsApp em um só lugar, com contexto completo de cada lead.",
-  },
-  {
-    icon: Bot,
-    title: "Respostas com IA",
-    desc: "Sugestões inteligentes e respostas automáticas para nunca deixar um cliente esperando.",
-  },
-  {
-    icon: BarChart3,
-    title: "Métricas em tempo real",
-    desc: "Acompanhe receita, conversão e tempo de resposta com dashboards claros e acionáveis.",
+    title: "Inbox compartilhado",
+    desc: "Todas as conversas do WhatsApp em uma só caixa: atribua para a equipe, adicione notas internas e nunca perca um cliente.",
     className: "lg:col-span-2",
     highlight: true,
   },
   {
     icon: Users,
-    title: "Gestão de contatos",
-    desc: "Tags, origem e histórico de cada lead organizados automaticamente.",
+    title: "Central de contatos",
+    desc: "Etiquetas, campos personalizados e histórico de cada lead — sem duplicidade.",
+  },
+  {
+    icon: KanbanSquare,
+    title: "Funil de vendas",
+    desc: "Kanban arrasta-e-solta com valor dos negócios e etapas do seu jeito.",
+  },
+  {
+    icon: Megaphone,
+    title: "Campanhas de broadcast",
+    desc: "Dispare mensagens em massa segmentadas por etiqueta e acompanhe entregas e falhas em tempo real.",
+    className: "lg:col-span-2",
+    highlight: true,
   },
   {
     icon: Zap,
-    title: "Automações",
-    desc: "Dispare mensagens, mova etapas e atribua responsáveis sem esforço manual.",
+    title: "Automações no-code",
+    desc: "Gatilho → ação em cadeia (estilo N8N): boas-vindas, follow-up, mover etapa e etiquetar — sozinho.",
+  },
+  {
+    icon: Workflow,
+    title: "Flows conversacionais",
+    desc: "Monte chatbots visuais com mensagens, perguntas e condições que qualificam seus contatos automaticamente.",
   },
 ]
 

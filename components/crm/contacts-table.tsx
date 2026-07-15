@@ -1,160 +1,71 @@
 "use client"
 
-import { useMemo, useState } from "react"
-import { Search, MessageCircle, Filter } from "lucide-react"
-import {
-  leads,
-  stages,
-  brl,
-  type StageId,
-} from "@/lib/mock-data"
-import { cn } from "@/lib/utils"
+import { useEffect, useState, useCallback } from "react"
+import { useRouter } from "next/navigation"
+import { Search, MessageCircle, Loader2, Users } from "lucide-react"
+import { authFetch } from "@/contexts/auth-context"
+import { usePlan } from "@/hooks/use-plan"
+import { LimitBanner } from "@/components/crm/plan-gate"
 
-const filters: { id: StageId | "all"; label: string }[] = [
-  { id: "all", label: "Todos" },
-  ...stages.map((s) => ({ id: s.id, label: s.title })),
-]
+type Contact = {
+  id: string; wa_id: string; name: string; phone: string | null; avatar_url: string | null
+  created_at: string; conversations: { id: string; last_message_at: string }[] | null
+}
 
-function initials(name: string) {
-  return name
-    .split(" ")
-    .map((n) => n[0])
-    .slice(0, 2)
-    .join("")
+function Avatar({ name, url }: { name?: string | null; url?: string | null }) {
+  const [err, setErr] = useState(false)
+  if (url && !err) return <img src={url} alt="" onError={() => setErr(true)} className="size-9 rounded-full object-cover bg-muted shrink-0" />
+  return <div className="size-9 rounded-full bg-emerald-600 text-white grid place-items-center text-xs font-semibold shrink-0">{(name || "?").slice(0, 2).toUpperCase()}</div>
 }
 
 export function ContactsTable() {
-  const [query, setQuery] = useState("")
-  const [filter, setFilter] = useState<StageId | "all">("all")
+  const [contacts, setContacts] = useState<Contact[]>([])
+  const [loading, setLoading] = useState(true)
+  const [q, setQ] = useState("")
+  const router = useRouter()
 
-  const filtered = useMemo(() => {
-    return leads.filter((l) => {
-      const matchFilter = filter === "all" || l.stage === filter
-      const matchQuery =
-        l.name.toLowerCase().includes(query.toLowerCase()) ||
-        l.phone.includes(query)
-      return matchFilter && matchQuery
-    })
-  }, [query, filter])
+  const load = useCallback(async () => {
+    const r = await authFetch("/api/contacts")
+    if (r.ok) setContacts((await r.json()).contacts || [])
+    setLoading(false)
+  }, [])
+  useEffect(() => { load() }, [load])
+
+  const filtered = contacts.filter((c) => { const s = q.toLowerCase(); return !s || (c.name || "").toLowerCase().includes(s) || (c.phone || "").includes(s) })
+  const { leads } = usePlan()
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="relative w-full sm:max-w-xs">
-          <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-          <input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Buscar por nome ou telefone"
-            className="h-10 w-full rounded-lg border border-input bg-secondary/50 pl-9 pr-3 text-sm outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-ring/40"
-          />
-        </div>
-        <div className="flex items-center gap-2 overflow-x-auto pb-1">
-          <Filter className="size-4 shrink-0 text-muted-foreground" />
-          {filters.map((f) => (
-            <button
-              key={f.id}
-              onClick={() => setFilter(f.id)}
-              className={cn(
-                "shrink-0 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors",
-                filter === f.id
-                  ? "border-primary bg-primary/15 text-primary"
-                  : "border-border text-muted-foreground hover:text-foreground",
-              )}
-            >
-              {f.label}
-            </button>
-          ))}
+    <>
+    <LimitBanner used={contacts.length} limit={leads.limit} unlimited={leads.unlimited} noun="leads" requiredPlan="Pro" />
+    <div className="rounded-xl border border-border bg-card">
+      <div className="flex items-center justify-between gap-3 p-4 border-b border-border flex-wrap">
+        <div className="flex items-center gap-2 text-sm font-medium text-foreground"><Users className="size-4 text-emerald-600" /> {contacts.length} contatos</div>
+        <div className="relative w-full sm:w-72">
+          <Search className="size-4 text-muted-foreground absolute left-3 top-1/2 -translate-y-1/2" />
+          <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Buscar por nome ou telefone…" className="w-full pl-9 pr-3 py-2 rounded-lg bg-muted/50 border border-border text-sm outline-none" />
         </div>
       </div>
-
-      <div className="overflow-hidden rounded-xl border border-border bg-card">
+      {loading ? (
+        <div className="grid place-items-center py-20"><Loader2 className="size-6 animate-spin text-muted-foreground" /></div>
+      ) : filtered.length === 0 ? (
+        <div className="py-16 text-center text-sm text-muted-foreground"><Users className="size-8 mx-auto mb-2 opacity-40" />{q ? "Nenhum contato encontrado." : "Nenhum contato ainda. Conecte o WhatsApp para sincronizar."}</div>
+      ) : (
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-border text-left text-xs uppercase tracking-wider text-muted-foreground">
-                <th className="px-4 py-3 font-medium">Contato</th>
-                <th className="px-4 py-3 font-medium">Etapa</th>
-                <th className="hidden px-4 py-3 font-medium md:table-cell">
-                  Origem
-                </th>
-                <th className="hidden px-4 py-3 font-medium lg:table-cell">
-                  Tags
-                </th>
-                <th className="hidden px-4 py-3 font-medium sm:table-cell">
-                  Responsável
-                </th>
-                <th className="px-4 py-3 text-right font-medium">Valor</th>
-                <th className="px-4 py-3" />
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border">
-              {filtered.map((lead) => {
-                const stage = stages.find((s) => s.id === lead.stage)!
+            <thead><tr className="text-left text-xs text-muted-foreground border-b border-border">
+              <th className="px-4 py-2.5 font-medium">Contato</th><th className="px-4 py-2.5 font-medium">Telefone</th>
+              <th className="px-4 py-2.5 font-medium hidden sm:table-cell">Última conversa</th><th className="px-4 py-2.5" />
+            </tr></thead>
+            <tbody>
+              {filtered.map((c) => {
+                const conv = c.conversations?.[0]
                 return (
-                  <tr
-                    key={lead.id}
-                    className="transition-colors hover:bg-secondary/30"
-                  >
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-3">
-                        <span
-                          className="flex size-9 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold text-primary-foreground"
-                          style={{ background: lead.avatarColor }}
-                        >
-                          {initials(lead.name)}
-                        </span>
-                        <div className="min-w-0">
-                          <p className="truncate font-medium">{lead.name}</p>
-                          <p className="truncate text-xs text-muted-foreground">
-                            {lead.phone}
-                          </p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-4 py-3">
-                      <span
-                        className="inline-flex items-center gap-1.5 rounded-full px-2 py-1 text-xs font-medium"
-                        style={{
-                          color: stage.accent,
-                          background: "color-mix(in oklch, " + stage.accent + " 15%, transparent)",
-                        }}
-                      >
-                        <span
-                          className="size-1.5 rounded-full"
-                          style={{ background: stage.accent }}
-                        />
-                        {stage.title}
-                      </span>
-                    </td>
-                    <td className="hidden px-4 py-3 text-muted-foreground md:table-cell">
-                      {lead.source}
-                    </td>
-                    <td className="hidden px-4 py-3 lg:table-cell">
-                      <div className="flex flex-wrap gap-1">
-                        {lead.tags.map((tag) => (
-                          <span
-                            key={tag}
-                            className="rounded-md bg-secondary px-1.5 py-0.5 text-[11px] text-muted-foreground"
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                    </td>
-                    <td className="hidden px-4 py-3 text-muted-foreground sm:table-cell">
-                      {lead.owner}
-                    </td>
-                    <td className="px-4 py-3 text-right font-semibold">
-                      {brl(lead.value)}
-                    </td>
-                    <td className="px-4 py-3 text-right">
-                      <button
-                        className="inline-flex size-8 items-center justify-center rounded-lg border border-border text-muted-foreground transition-colors hover:border-primary/40 hover:text-primary"
-                        aria-label={"Conversar com " + lead.name}
-                      >
-                        <MessageCircle className="size-4" />
-                      </button>
+                  <tr key={c.id} className="border-b border-border/60 hover:bg-muted/30">
+                    <td className="px-4 py-2.5"><div className="flex items-center gap-3"><Avatar name={c.name} url={c.avatar_url} /><span className="font-medium text-foreground">{c.name || c.phone}</span></div></td>
+                    <td className="px-4 py-2.5 text-muted-foreground">{c.phone || c.wa_id}</td>
+                    <td className="px-4 py-2.5 text-muted-foreground hidden sm:table-cell">{conv?.last_message_at ? new Date(conv.last_message_at).toLocaleDateString("pt-BR") : "—"}</td>
+                    <td className="px-4 py-2.5 text-right">
+                      <button onClick={() => router.push("/inbox")} title="Abrir no Inbox" className="inline-grid size-8 place-items-center rounded-full bg-emerald-600/10 text-emerald-600 hover:bg-emerald-600/20"><MessageCircle className="size-4" /></button>
                     </td>
                   </tr>
                 )
@@ -162,15 +73,8 @@ export function ContactsTable() {
             </tbody>
           </table>
         </div>
-        {filtered.length === 0 && (
-          <div className="py-12 text-center text-sm text-muted-foreground">
-            Nenhum contato encontrado.
-          </div>
-        )}
-      </div>
-      <p className="text-xs text-muted-foreground">
-        {filtered.length} de {leads.length} contatos
-      </p>
+      )}
     </div>
+    </>
   )
 }

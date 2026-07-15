@@ -1,0 +1,38 @@
+[
+  {
+    "type": "header",
+    "severity": "medium",
+    "name": "CSP ausente",
+    "note": "definir Content-Security-Policy (mitiga XSS)"
+  },
+  {
+    "type": "header",
+    "severity": "medium",
+    "name": "Clickjacking",
+    "note": "sem X-Frame-Options nem frame-ancestors"
+  },
+  {
+    "type": "header",
+    "severity": "low",
+    "name": "X-Content-Type-Options",
+    "note": "definir nosniff"
+  },
+  {
+    "type": "header",
+    "severity": "info",
+    "name": "Referrer-Policy ausente",
+    "note": "definir no-referrer/strict-origin"
+  },
+  {
+    "type": "header",
+    "severity": "info",
+    "name": "Permissions-Policy ausente",
+    "note": "restringir APIs do browser"
+  },
+  {
+    "type": "header",
+    "severity": "low",
+    "name": "CORS aberto",
+    "note": "ACAO=* "
+  }
+]

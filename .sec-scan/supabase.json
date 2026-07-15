@@ -1,0 +1,44 @@
+[
+  {
+    "type": "supabase",
+    "severity": "info",
+    "name": "Tabela acessível (0 linhas): profiles",
+    "note": "200 sem linhas — RLS provavelmente OK (ou vazia)"
+  },
+  {
+    "type": "supabase",
+    "severity": "info",
+    "name": "Tabela acessível (0 linhas): contacts",
+    "note": "200 sem linhas — RLS provavelmente OK (ou vazia)"
+  },
+  {
+    "type": "supabase",
+    "severity": "info",
+    "name": "Tabela acessível (0 linhas): leads",
+    "note": "200 sem linhas — RLS provavelmente OK (ou vazia)"
+  },
+  {
+    "type": "supabase",
+    "severity": "info",
+    "name": "Tabela acessível (0 linhas): messages",
+    "note": "200 sem linhas — RLS provavelmente OK (ou vazia)"
+  },
+  {
+    "type": "supabase",
+    "severity": "info",
+    "name": "Tabela acessível (0 linhas): conversations",
+    "note": "200 sem linhas — RLS provavelmente OK (ou vazia)"
+  },
+  {
+    "type": "supabase",
+    "severity": "info",
+    "name": "Tabela acessível (0 linhas): audit_logs",
+    "note": "200 sem linhas — RLS provavelmente OK (ou vazia)"
+  },
+  {
+    "type": "supabase",
+    "severity": "info",
+    "name": "Resumo Supabase",
+    "note": "6 tabelas candidatas acessíveis, 0 com LEITURA anônima de dados"
+  }
+]

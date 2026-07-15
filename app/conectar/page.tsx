@@ -5,9 +5,9 @@ export default function ConectarPage() {
   return (
     <AppShell
       title="Conectar WhatsApp"
-      subtitle="Leia o QR Code para vincular seu número"
+      subtitle="Vincule um ou mais números conforme o seu plano"
     >
-      <div className="mx-auto w-full max-w-5xl">
+      <div className="w-full">
         <WhatsappConnect />
       </div>
     </AppShell>

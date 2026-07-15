@@ -14,6 +14,7 @@ import {
   KeyRound,
   ArrowLeft,
   ShieldCheck,
+  Image as ImageIcon,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Logo } from "@/components/brand/logo"
@@ -27,6 +28,7 @@ export const adminNav = [
   { href: "/admin/monitoramento", label: "Visitantes & monitoramento", icon: Globe },
   { href: "/admin/logs", label: "Logs & auditoria", icon: ScrollText },
   { href: "/admin/seo", label: "SEO", icon: Search },
+  { href: "/admin/marca", label: "Marca / Logo", icon: ImageIcon },
   { href: "/admin/sistema", label: "API & backup", icon: KeyRound },
 ]
 

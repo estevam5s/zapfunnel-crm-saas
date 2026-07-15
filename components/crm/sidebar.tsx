@@ -13,20 +13,29 @@ import {
   QrCode,
   UserRound,
 } from "lucide-react"
+import { Sparkles, Zap, Megaphone, Workflow, RefreshCw } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { leads } from "@/lib/mock-data"
+import { useUnreadCount } from "@/hooks/use-unread"
 import { Logo } from "@/components/brand/logo"
+import { usePlan, type FeatureKey } from "@/hooks/use-plan"
+import { PlanBadge } from "@/components/crm/plan-gate"
 
-const mainNav = [
+type NavItem = { href: string; label: string; icon: typeof LayoutDashboard; feature?: FeatureKey }
+
+const mainNav: NavItem[] = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/funil", label: "Funil de vendas", icon: KanbanSquare },
   { href: "/contatos", label: "Contatos", icon: Users },
   { href: "/inbox", label: "Inbox", icon: MessageCircle },
-  { href: "/relatorios", label: "Relatórios", icon: BarChart3 },
+  { href: "/broadcast", label: "Broadcast", icon: Megaphone, feature: "automations" },
+  { href: "/flows", label: "Flows", icon: Workflow, feature: "automations" },
+  { href: "/automacoes", label: "Automações", icon: Zap, feature: "automations" },
+  { href: "/relatorios", label: "Relatórios", icon: BarChart3, feature: "realTimeMetrics" },
 ]
 
-const accountNav = [
+const accountNav: NavItem[] = [
   { href: "/conectar", label: "Conectar WhatsApp", icon: QrCode },
+  { href: "/integracoes", label: "API & Integrações", icon: Settings, feature: "dedicatedApi" },
   { href: "/gerenciar-plano", label: "Gerenciar plano", icon: CreditCard },
   { href: "/perfil", label: "Perfil", icon: UserRound },
   { href: "/configuracoes", label: "Configurações", icon: Settings },
@@ -34,32 +43,29 @@ const accountNav = [
 
 export function Sidebar() {
   const pathname = usePathname()
-  const unread = leads.reduce((s, l) => s + l.unread, 0)
+  const unread = useUnreadCount()
+  const { planName, can, waNumbers } = usePlan()
 
-  function NavLink({
-    href,
-    label,
-    icon: Icon,
-  }: {
-    href: string
-    label: string
-    icon: typeof LayoutDashboard
-  }) {
+  function NavLink({ href, label, icon: Icon, feature }: NavItem) {
     const active = pathname.startsWith(href)
+    const locked = !!feature && !can(feature)
     return (
       <li>
         <Link
-          href={href}
+          href={locked ? "/gerenciar-plano" : href}
           className={cn(
             "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors",
             active
               ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
               : "text-muted-foreground hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground",
+            locked && "opacity-70",
           )}
+          title={locked ? `${label} — requer upgrade` : undefined}
         >
           <Icon className="size-[18px] shrink-0" />
-          <span className="flex-1">{label}</span>
-          {href === "/inbox" && unread > 0 && (
+          <span className="flex-1 truncate">{label}</span>
+          {locked && feature && <PlanBadge feature={feature} />}
+          {!locked && href === "/inbox" && unread > 0 && (
             <span className="flex size-5 items-center justify-center rounded-full bg-primary text-[11px] font-semibold text-primary-foreground">
               {unread}
             </span>
@@ -70,14 +76,14 @@ export function Sidebar() {
   }
 
   return (
-    <aside className="hidden md:flex md:w-64 lg:w-72 flex-col border-r border-sidebar-border bg-sidebar shrink-0">
+    <aside className="hidden md:flex h-dvh md:w-64 lg:w-72 flex-col border-r border-sidebar-border bg-sidebar shrink-0">
       <div className="flex items-center px-5 h-16 border-b border-sidebar-border">
         <Link href="/dashboard">
           <Logo subtitle="CRM para WhatsApp" />
         </Link>
       </div>
 
-      <nav className="flex-1 overflow-y-auto px-3 py-4">
+      <nav className="flex-1 overflow-y-auto overscroll-contain px-3 py-4">
         <p className="px-3 pb-2 text-xs font-medium uppercase tracking-wider text-muted-foreground">
           Menu
         </p>
@@ -99,15 +105,31 @@ export function Sidebar() {
 
       <div className="p-3">
         <div className="rounded-xl border border-sidebar-border bg-gradient-to-br from-accent/25 to-primary/15 p-4">
-          <p className="text-sm font-semibold">Plano Pro</p>
+          <p className="flex items-center justify-between gap-1.5 text-sm font-semibold">
+            <span className="flex items-center gap-1.5">
+              <Sparkles className="size-4 text-accent" /> Plano {planName}
+            </span>
+            <span className="rounded-full bg-primary/15 px-2 py-0.5 text-[10px] font-semibold text-primary">
+              {waNumbers.unlimited ? "∞ números" : `${waNumbers.limit} ${waNumbers.limit === 1 ? "número" : "números"}`}
+            </span>
+          </p>
           <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
-            Você usou 3 de 5 números conectados.
+            {waNumbers.unlimited || waNumbers.limit > 1
+              ? "Troque ou adicione números de WhatsApp da sua conta."
+              : "Troque o número de WhatsApp conectado quando precisar."}
           </p>
           <Link
-            href="/gerenciar-plano"
-            className="mt-3 flex w-full items-center justify-center rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-primary-foreground transition-opacity hover:opacity-90"
+            href="/conectar"
+            className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-primary-foreground transition-opacity hover:opacity-90"
           >
-            Gerenciar plano
+            <RefreshCw className="size-3.5" />
+            {waNumbers.unlimited || waNumbers.limit > 1 ? "Trocar / adicionar número" : "Trocar de número"}
+          </Link>
+          <Link
+            href="/gerenciar-plano"
+            className="mt-2 flex w-full items-center justify-center rounded-lg border border-sidebar-border px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+          >
+            {planName === "Enterprise" || planName === "Admin" ? "Gerenciar plano" : "Fazer upgrade"}
           </Link>
         </div>
       </div>

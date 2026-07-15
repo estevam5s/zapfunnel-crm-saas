@@ -1,0 +1,150 @@
+{
+  "target": ".",
+  "score": 74,
+  "grade": "C",
+  "count": {
+    "medium": 2,
+    "low": 8,
+    "info": 10
+  },
+  "findings": [
+    {
+      "type": "header",
+      "severity": "medium",
+      "name": "CSP ausente",
+      "note": "definir Content-Security-Policy (mitiga XSS)"
+    },
+    {
+      "type": "header",
+      "severity": "medium",
+      "name": "Clickjacking",
+      "note": "sem X-Frame-Options nem frame-ancestors"
+    },
+    {
+      "type": "header",
+      "severity": "low",
+      "name": "X-Content-Type-Options",
+      "note": "definir nosniff"
+    },
+    {
+      "type": "header",
+      "severity": "low",
+      "name": "CORS aberto",
+      "note": "ACAO=* "
+    },
+    {
+      "type": "secret",
+      "name": "Supabase service_role JWT",
+      "severity": "low",
+      "file": ".env.local",
+      "line": 4,
+      "match": "eyJhbGciOiJI…(219 chars)",
+      "note": "gitignored (não vai ao repo) — mitigado; ainda assim mover p/ env/secret manager e verificar histórico git"
+    },
+    {
+      "type": "secret",
+      "name": "Stripe secret key",
+      "severity": "low",
+      "file": ".env.local",
+      "line": 9,
+      "match": "sk_live_51Tn…(107 chars)",
+      "note": "gitignored (não vai ao repo) — mitigado; ainda assim mover p/ env/secret manager e verificar histórico git"
+    },
+    {
+      "type": "secret",
+      "name": "Stripe webhook secret",
+      "severity": "low",
+      "file": ".env.local",
+      "line": 10,
+      "match": "whsec_g4sENK…(38 chars)",
+      "note": "gitignored (não vai ao repo) — mitigado; ainda assim mover p/ env/secret manager e verificar histórico git"
+    },
+    {
+      "type": "secret",
+      "name": "Supabase mgmt PAT",
+      "severity": "low",
+      "file": ".env.local",
+      "line": 5,
+      "match": "sbp_0d2c83e0…(44 chars)",
+      "note": "gitignored (não vai ao repo) — mitigado; ainda assim mover p/ env/secret manager e verificar histórico git"
+    },
+    {
+      "type": "secret",
+      "name": "Supabase service_role JWT",
+      "severity": "low",
+      "file": "supabase.txt",
+      "line": 8,
+      "match": "eyJhbGciOiJI…(219 chars)",
+      "note": "gitignored (não vai ao repo) — mitigado; ainda assim mover p/ env/secret manager e verificar histórico git"
+    },
+    {
+      "type": "secret",
+      "name": "Supabase mgmt PAT",
+      "severity": "low",
+      "file": "supabase.txt",
+      "line": 9,
+      "match": "sbp_0d2c83e0…(44 chars)",
+      "note": "gitignored (não vai ao repo) — mitigado; ainda assim mover p/ env/secret manager e verificar histórico git"
+    },
+    {
+      "type": "endpoint",
+      "severity": "info",
+      "name": "Webhook valida assinatura: /api/webhook",
+      "note": "rejeita sem assinatura (400) — OK"
+    },
+    {
+      "type": "header",
+      "severity": "info",
+      "name": "Referrer-Policy ausente",
+      "note": "definir no-referrer/strict-origin"
+    },
+    {
+      "type": "header",
+      "severity": "info",
+      "name": "Permissions-Policy ausente",
+      "note": "restringir APIs do browser"
+    },
+    {
+      "type": "supabase",
+      "severity": "info",
+      "name": "Tabela acessível (0 linhas): profiles",
+      "note": "200 sem linhas — RLS provavelmente OK (ou vazia)"
+    },
+    {
+      "type": "supabase",
+      "severity": "info",
+      "name": "Tabela acessível (0 linhas): contacts",
+      "note": "200 sem linhas — RLS provavelmente OK (ou vazia)"
+    },
+    {
+      "type": "supabase",
+      "severity": "info",
+      "name": "Tabela acessível (0 linhas): leads",
+      "note": "200 sem linhas — RLS provavelmente OK (ou vazia)"
+    },
+    {
+      "type": "supabase",
+      "severity": "info",
+      "name": "Tabela acessível (0 linhas): messages",
+      "note": "200 sem linhas — RLS provavelmente OK (ou vazia)"
+    },
+    {
+      "type": "supabase",
+      "severity": "info",
+      "name": "Tabela acessível (0 linhas): conversations",
+      "note": "200 sem linhas — RLS provavelmente OK (ou vazia)"
+    },
+    {
+      "type": "supabase",
+      "severity": "info",
+      "name": "Tabela acessível (0 linhas): audit_logs",
+      "note": "200 sem linhas — RLS provavelmente OK (ou vazia)"
+    },
+    {
+      "type": "supabase",
+      "severity": "info",
+      "name": "Resumo Supabase",
+      "note": "6 tabelas candidatas acessíveis, 0 com LEITURA anônima de dados"
+    }
+  ]
+}

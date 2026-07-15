@@ -1,51 +1,35 @@
-import { stages, leads, brl } from "@/lib/mock-data"
+"use client"
+
+import { useEffect, useState } from "react"
+import { authFetch } from "@/contexts/auth-context"
+
+const STAGES = [
+  { id: "novo", title: "Novo", color: "#94a3b8" },
+  { id: "em_conversa", title: "Em conversa", color: "#3b82f6" },
+  { id: "qualificado", title: "Qualificado", color: "#8b5cf6" },
+  { id: "proposta", title: "Proposta", color: "#f59e0b" },
+  { id: "ganho", title: "Ganho", color: "#10b981" },
+  { id: "perdido", title: "Perdido", color: "#ef4444" },
+]
 
 export function FunnelOverview() {
-  const data = stages.map((stage) => {
-    const list = leads.filter((l) => l.stage === stage.id)
-    return {
-      ...stage,
-      count: list.length,
-      value: list.reduce((s, l) => s + l.value, 0),
-    }
-  })
-  const max = Math.max(...data.map((d) => d.count), 1)
-
+  const [byStage, setByStage] = useState<Record<string, number>>({})
+  useEffect(() => { authFetch("/api/dashboard").then((r) => r.ok && r.json().then((d) => setByStage(d.by_stage || {}))).catch(() => {}) }, [])
+  const total = Object.values(byStage).reduce((s, v) => s + v, 0) || 1
   return (
     <div className="rounded-xl border border-border bg-card p-5">
-      <div className="mb-4">
-        <h2 className="text-sm font-semibold">Funil de vendas</h2>
-        <p className="text-xs text-muted-foreground">
-          Distribuição de negócios por etapa
-        </p>
+      <h3 className="text-sm font-semibold mb-4">Funil de vendas</h3>
+      <div className="space-y-3">
+        {STAGES.map((s) => {
+          const n = byStage[s.id] || 0
+          return (
+            <div key={s.id}>
+              <div className="flex items-center justify-between text-xs mb-1"><span className="flex items-center gap-2"><span className="size-2 rounded-full" style={{ background: s.color }} />{s.title}</span><span className="text-muted-foreground font-medium">{n}</span></div>
+              <div className="h-2 rounded-full bg-muted overflow-hidden"><div className="h-full rounded-full transition-all" style={{ width: `${(n / total) * 100}%`, background: s.color }} /></div>
+            </div>
+          )
+        })}
       </div>
-      <ul className="flex flex-col gap-4">
-        {data.map((d) => (
-          <li key={d.id}>
-            <div className="mb-1.5 flex items-center justify-between text-sm">
-              <span className="flex items-center gap-2">
-                <span
-                  className="size-2.5 rounded-full"
-                  style={{ background: d.accent }}
-                />
-                {d.title}
-              </span>
-              <span className="text-muted-foreground">
-                {d.count} · {brl(d.value)}
-              </span>
-            </div>
-            <div className="h-2 overflow-hidden rounded-full bg-secondary">
-              <div
-                className="h-full rounded-full transition-all"
-                style={{
-                  width: `${(d.count / max) * 100}%`,
-                  background: d.accent,
-                }}
-              />
-            </div>
-          </li>
-        ))}
-      </ul>
     </div>
   )
 }

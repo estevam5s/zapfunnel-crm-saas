@@ -1,6 +1,5 @@
 import type { SVGProps } from "react"
 import Link from "next/link"
-import { Apple, Play } from "lucide-react"
 import { Logo } from "@/components/brand/logo"
 
 function InstagramIcon(props: SVGProps<SVGSVGElement>) {
@@ -169,45 +168,6 @@ export function Footer() {
               </ul>
             </div>
           ))}
-        </div>
-
-        <div className="h-px bg-border/60" />
-
-        {/* app download row */}
-        <div className="flex flex-wrap items-center justify-between gap-4 py-6">
-          <p className="text-sm text-muted-foreground">
-            Leve o ZapFunnel no bolso. Baixe o app e venda de qualquer lugar.
-          </p>
-          <div className="flex flex-wrap gap-3">
-            <a
-              href="#"
-              className="flex h-12 items-center gap-2.5 rounded-xl bg-foreground px-4 text-background transition-transform hover:-translate-y-0.5"
-            >
-              <Apple className="size-6" />
-              <span className="flex flex-col items-start leading-none">
-                <span className="text-[10px] tracking-tight opacity-80">
-                  Baixe na
-                </span>
-                <span className="text-base font-bold leading-tight">
-                  App Store
-                </span>
-              </span>
-            </a>
-            <a
-              href="#"
-              className="flex h-12 items-center gap-2.5 rounded-xl bg-foreground px-4 text-background transition-transform hover:-translate-y-0.5"
-            >
-              <Play className="size-6" />
-              <span className="flex flex-col items-start leading-none">
-                <span className="text-[10px] tracking-tight opacity-80">
-                  Disponível no
-                </span>
-                <span className="text-base font-bold leading-tight">
-                  Google Play
-                </span>
-              </span>
-            </a>
-          </div>
         </div>
 
         <div className="h-px bg-border/60" />

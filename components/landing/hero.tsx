@@ -91,9 +91,10 @@ export function Hero() {
             transition={{ duration: 0.6, delay: 0.2, ease }}
             className="mx-auto mt-6 max-w-xl text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg"
           >
-            O CRM feito para vendas no WhatsApp. Organize leads em um funil
-            visual, responda mais rápido e feche mais negócios — tudo em um só
-            lugar.
+            Gerencie todo o seu WhatsApp em uma só caixa de entrada: inbox
+            compartilhado, funil de vendas, disparos em massa e automações
+            no-code. Do primeiro "oi" ao negócio fechado, sem trocar de
+            ferramenta.
           </motion.p>
 
           <motion.div

@@ -1,8 +1,10 @@
 import { Analytics } from '@vercel/analytics/next'
+import ChatWidgetMount from "@/components/ChatWidgetMount";
 import type { Metadata, Viewport } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
 import { AuthProvider } from '@/contexts/auth-context'
+import { Toaster } from 'sonner'
 
 const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] })
 const geistMono = Geist_Mono({
@@ -15,23 +17,7 @@ export const metadata: Metadata = {
   description:
     'CRM focado em vendas no WhatsApp com funil de vendas, contatos e inbox de conversas.',
   generator: 'v0.app',
-  icons: {
-    icon: [
-      {
-        url: '/icon-light-32x32.png',
-        media: '(prefers-color-scheme: light)',
-      },
-      {
-        url: '/icon-dark-32x32.png',
-        media: '(prefers-color-scheme: dark)',
-      },
-      {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
-      },
-    ],
-    apple: '/apple-icon.png',
-  },
+  icons: { icon: "/brand-logo.png", shortcut: "/brand-logo.png", apple: "/brand-logo.png" },
 }
 
 export const viewport: Viewport = {
@@ -51,8 +37,9 @@ export default function RootLayout({
     >
       <body className="font-sans antialiased bg-background text-foreground">
         <AuthProvider>{children}</AuthProvider>
+        <Toaster theme="dark" position="top-center" richColors />
         {process.env.NODE_ENV === 'production' && <Analytics />}
-      </body>
+      <ChatWidgetMount appName="ZapFunnel" accent="#22c55e" /></body>
     </html>
   )
 }

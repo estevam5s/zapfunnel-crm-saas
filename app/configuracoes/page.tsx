@@ -1,15 +1,19 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import {
   SlidersHorizontal,
   Bell,
   Bot,
   ShieldCheck,
   Globe,
+  Check,
+  Loader2,
 } from "lucide-react"
 import { AppShell } from "@/components/crm/app-shell"
 import { cn } from "@/lib/utils"
+import { authFetch } from "@/contexts/auth-context"
+import { toast } from "sonner"
 
 const sections = [
   { id: "geral", label: "Geral", icon: SlidersHorizontal },
@@ -84,14 +88,33 @@ const initialToggles: Record<string, boolean> = {
 export default function ConfiguracoesPage() {
   const [active, setActive] = useState<SectionId>("geral")
   const [toggles, setToggles] = useState(initialToggles)
+  const [general, setGeneral] = useState({ company: "ZapFunnel", language: "Português (Brasil)", currency: "Real (R$)" })
+  const [saving, setSaving] = useState(false)
+
+  useEffect(() => {
+    authFetch("/api/profile").then((r) => r.ok && r.json().then((d) => {
+      const s = d.profile?.settings || {}
+      if (s.toggles) setToggles((t) => ({ ...t, ...s.toggles }))
+      if (s.general) setGeneral((g) => ({ ...g, ...s.general }))
+    })).catch(() => {})
+  }, [])
 
   function flip(key: string) {
     setToggles((t) => ({ ...t, [key]: !t[key] }))
   }
+  async function save() {
+    setSaving(true)
+    const r = await authFetch("/api/profile", { method: "PATCH", body: JSON.stringify({ settings: { toggles, general } }) })
+    setSaving(false)
+    r.ok ? toast.success("Configurações salvas!") : toast.error("Erro ao salvar")
+  }
 
   return (
     <AppShell title="Configurações" subtitle="Personalize sua conta e o sistema">
-      <div className="mx-auto grid w-full max-w-5xl grid-cols-1 gap-6 lg:grid-cols-[200px_1fr]">
+      <div className="mb-4 flex w-full justify-end">
+        <button onClick={save} disabled={saving} className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-60">{saving ? <Loader2 className="size-4 animate-spin" /> : <Check className="size-4" />} Salvar configurações</button>
+      </div>
+      <div className="grid w-full grid-cols-1 gap-6 lg:grid-cols-[220px_1fr]">
         {/* Section nav */}
         <nav className="flex gap-1 overflow-x-auto lg:flex-col">
           {sections.map((s) => {
@@ -124,7 +147,8 @@ export default function ConfiguracoesPage() {
                   Nome da empresa
                 </span>
                 <input
-                  defaultValue="ZapFunnel"
+                  value={general.company}
+                  onChange={(e) => setGeneral((g) => ({ ...g, company: e.target.value }))}
                   className="h-10 rounded-lg border border-input bg-secondary/40 px-3 text-sm outline-none focus:ring-2 focus:ring-ring/40"
                 />
               </label>
@@ -134,7 +158,7 @@ export default function ConfiguracoesPage() {
                 </span>
                 <div className="relative">
                   <Globe className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-                  <select className="h-10 w-full appearance-none rounded-lg border border-input bg-secondary/40 pl-9 pr-3 text-sm outline-none focus:ring-2 focus:ring-ring/40">
+                  <select value={general.language} onChange={(e) => setGeneral((g) => ({ ...g, language: e.target.value }))} className="h-10 w-full appearance-none rounded-lg border border-input bg-secondary/40 pl-9 pr-3 text-sm outline-none focus:ring-2 focus:ring-ring/40">
                     <option>Português (Brasil)</option>
                     <option>English (US)</option>
                     <option>Español</option>
@@ -145,7 +169,7 @@ export default function ConfiguracoesPage() {
                 <span className="text-xs font-medium text-muted-foreground">
                   Moeda
                 </span>
-                <select className="h-10 rounded-lg border border-input bg-secondary/40 px-3 text-sm outline-none focus:ring-2 focus:ring-ring/40">
+                <select value={general.currency} onChange={(e) => setGeneral((g) => ({ ...g, currency: e.target.value }))} className="h-10 rounded-lg border border-input bg-secondary/40 px-3 text-sm outline-none focus:ring-2 focus:ring-ring/40">
                   <option>Real (R$)</option>
                   <option>Dólar (US$)</option>
                   <option>Euro (€)</option>
@@ -235,8 +259,8 @@ export default function ConfiguracoesPage() {
           )}
 
           <div className="mt-6 flex justify-end border-t border-border pt-5">
-            <button className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90">
-              Salvar alterações
+            <button onClick={save} disabled={saving} className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-60">
+              {saving ? <Loader2 className="size-4 animate-spin" /> : <Check className="size-4" />} Salvar alterações
             </button>
           </div>
         </div>

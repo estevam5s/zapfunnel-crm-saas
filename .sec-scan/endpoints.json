@@ -1,0 +1,8 @@
+[
+  {
+    "type": "endpoint",
+    "severity": "info",
+    "name": "Webhook valida assinatura: /api/webhook",
+    "note": "rejeita sem assinatura (400) — OK"
+  }
+]

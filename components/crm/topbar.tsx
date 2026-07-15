@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { Plus, ArrowUpRight } from "lucide-react"
+import { Plus, ArrowUpRight, PanelLeftClose, PanelLeftOpen } from "lucide-react"
 import { SearchBox } from "./search-box"
 import { NotificationsMenu } from "./notifications-menu"
 import { UserMenu } from "./user-menu"
@@ -9,12 +9,21 @@ import { UserMenu } from "./user-menu"
 export function Topbar({
   title,
   subtitle,
+  onToggleSidebar,
+  sidebarCollapsed,
 }: {
   title: string
   subtitle?: string
+  onToggleSidebar?: () => void
+  sidebarCollapsed?: boolean
 }) {
   return (
     <header className="flex h-16 items-center gap-2 border-b border-border bg-background/80 px-4 backdrop-blur md:gap-4 md:px-6 sticky top-0 z-30">
+      {onToggleSidebar && (
+        <button onClick={onToggleSidebar} title={sidebarCollapsed ? "Mostrar menu" : "Esconder menu"} className="hidden md:grid size-9 place-items-center rounded-lg text-muted-foreground hover:bg-secondary/60 hover:text-foreground shrink-0">
+          {sidebarCollapsed ? <PanelLeftOpen className="size-5" /> : <PanelLeftClose className="size-5" />}
+        </button>
+      )}
       <div className="min-w-0 flex-1">
         <h1 className="truncate text-lg font-semibold tracking-tight">
           {title}
