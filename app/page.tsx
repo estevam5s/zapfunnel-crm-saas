@@ -8,6 +8,7 @@ import { Testimonials } from "@/components/landing/testimonials"
 import { Pricing } from "@/components/landing/pricing"
 import { CTA } from "@/components/landing/cta"
 import { Footer } from "@/components/landing/footer"
+import { FeedbackWidget } from "@/components/feedback-widget"
 import { ScrollFX } from "@/components/landing/scroll-fx"
 
 export default function LandingPage() {
@@ -26,6 +27,7 @@ export default function LandingPage() {
         <CTA />
       </main>
       <Footer />
+      <FeedbackWidget />
     </div>
   )
 }

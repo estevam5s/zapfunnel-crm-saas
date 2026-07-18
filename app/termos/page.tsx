@@ -1,0 +1,5 @@
+import Link from 'next/link'
+export const metadata = { title: 'Termos de Uso · ZapFunnel' }
+export default function Page() {
+  return (<main className="mx-auto min-h-screen max-w-3xl bg-background px-6 py-16 text-muted-foreground"><Link href="/" className="text-sm text-green-500">&larr; Voltar ao início</Link><h1 className="mt-6 text-3xl font-bold text-foreground">Termos de Uso</h1><p className="mt-2 text-sm text-muted-foreground/70">Última atualização: julho de 2026</p><div className="mt-8 space-y-6 leading-relaxed"><p>Ao usar o ZapFunnel você concorda com estes termos. O serviço organiza leads e conversas de WhatsApp num funil de vendas com automações.</p><p>Você é responsável pelo uso adequado da plataforma e pela conformidade das suas comunicações com as políticas do WhatsApp e a legislação.</p><p>Assinaturas renovam automaticamente conforme o ciclo; o cancelamento pode ser feito a qualquer momento pelo painel.</p><p>O serviço é fornecido "como está", com melhores esforços de disponibilidade.</p></div><p className="mt-10 text-sm text-muted-foreground/70">Conexão protegida por SSL. Em conformidade com a LGPD (Lei nº 13.709/2018).</p></main>);
+}

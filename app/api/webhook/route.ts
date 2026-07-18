@@ -1,6 +1,18 @@
 import { NextResponse } from "next/server"
 import { createAdminClient } from "@/lib/supabase"
 import { stripeReq, verifyStripeSignature, logAudit } from "@/lib/saas"
+import { notifyWelcome, notifyCancellation, notifyDunning } from "@/lib/notify-email"
+
+async function emailForUser(db: any, uid?: string | null): Promise<string | null> {
+  if (!uid) return null
+  const { data } = await db.from("profiles").select("email").eq("id", uid).maybeSingle()
+  return (data?.email as string | undefined) || null
+}
+async function emailForCustomer(db: any, customer?: string | null): Promise<string | null> {
+  if (!customer) return null
+  const { data } = await db.from("app_subscriptions").select("user_id").eq("stripe_customer_id", customer).maybeSingle()
+  return emailForUser(db, data?.user_id as string | undefined)
+}
 
 export const dynamic = "force-dynamic"
 const REFUND_DAYS = parseInt(process.env.REFUND_DAYS || "7", 10)
@@ -45,7 +57,14 @@ export async function POST(req: Request) {
           }, { onConflict: "user_id" })
           await db.from("profiles").update({ plan_slug: slug }).eq("id", uid)
           await logAudit({ actor_id: uid, action: "assinatura_ativada", target: slug, level: "info" })
+          const to = await emailForUser(db, uid); if (to) void notifyWelcome(to)
         }
+        break
+      }
+      case "invoice.payment_failed": {
+        const uid = obj.metadata?.user_id
+        if (obj.customer) await db.from("app_subscriptions").update({ status: "past_due", updated_at: new Date().toISOString() }).eq("stripe_customer_id", obj.customer)
+        const to = uid ? await emailForUser(db, uid) : await emailForCustomer(db, obj.customer); if (to) void notifyDunning(to)
         break
       }
       case "customer.subscription.created":
@@ -71,6 +90,7 @@ export async function POST(req: Request) {
           await db.from("app_subscriptions").update({ status: "canceled", plan_slug: "inicial", updated_at: new Date().toISOString() }).eq("user_id", uid)
           await db.from("profiles").update({ plan_slug: "inicial" }).eq("id", uid)
           await logAudit({ actor_id: uid, action: "assinatura_cancelada", level: "warning" })
+          const to = await emailForUser(db, uid); if (to) void notifyCancellation(to)
         }
         break
       }

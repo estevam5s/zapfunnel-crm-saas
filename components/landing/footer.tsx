@@ -90,11 +90,10 @@ const footerLinks = [
   {
     title: "Legal",
     links: [
-      { href: "#", label: "Termos de uso" },
-      { href: "#", label: "Política de privacidade" },
-      { href: "#", label: "Política de cookies" },
-      { href: "#", label: "Conformidade LGPD" },
-      { href: "#", label: "Segurança" },
+      { href: "/termos", label: "Termos de uso" },
+      { href: "/privacidade", label: "Política de privacidade" },
+      { href: "/cookies", label: "Política de cookies" },
+      { href: "/privacidade", label: "Conformidade LGPD" },
     ],
   },
 ]
@@ -175,11 +174,12 @@ export function Footer() {
         {/* copyright */}
         <div className="flex flex-col items-center justify-between gap-3 py-6 sm:flex-row">
           <p className="text-xs text-muted-foreground">
-            © {new Date().getFullYear()} ZapFunnel. Todos os direitos reservados.
+            © {new Date().getFullYear()} ZapFunnel. Todos os direitos reservados. · Em conformidade com a LGPD.
           </p>
-          <p className="text-xs text-muted-foreground">
-            Feito para equipes de vendas brasileiras.
-          </p>
+          <div className="flex items-center gap-3">
+            <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-0.5 text-[11px] font-medium text-emerald-400">🔒 SSL Secured</span>
+            <p className="text-xs text-muted-foreground">Feito para equipes de vendas brasileiras.</p>
+          </div>
         </div>
       </div>
     </footer>
