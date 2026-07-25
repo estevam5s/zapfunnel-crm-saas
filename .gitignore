@@ -21,3 +21,7 @@ supabase.txt
 
 SECURITY-REPORT.md
 security-report.json
+
+# macOS FAT junk
+._*
+.DS_Store

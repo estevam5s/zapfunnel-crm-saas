@@ -1,5 +1,5 @@
 import { Analytics } from '@vercel/analytics/next'
-import ChatWidgetMount from "@/components/ChatWidgetMount";
+import ChatwootLoader from './ChatwootLoader'
 import { CookieConsent } from "@/components/cookie-consent";
 import type { Metadata, Viewport } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
@@ -61,7 +61,7 @@ export default async function RootLayout({
         <AuthProvider>{children}</AuthProvider>
         <Toaster theme="dark" position="top-center" richColors />
         {process.env.NODE_ENV === 'production' && <Analytics />}
-      <ChatWidgetMount appName="ZapFunnel" accent="#22c55e" /><CookieConsent /></body>
+      <ChatwootLoader /><CookieConsent /></body>
     </html>
   )
 }
