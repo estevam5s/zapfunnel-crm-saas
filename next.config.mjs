@@ -10,8 +10,9 @@ const csp = [
   "img-src 'self' data: blob: https:",
   "font-src 'self' data:",
   "style-src 'self' 'unsafe-inline'",
-  "script-src 'self' 'unsafe-inline' 'unsafe-eval https://saas-chatwoot.ucpvkj.easypanel.host'",
-  "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://saas-chat.ucpvkj.easypanel.host https://saas-chatwoot.ucpvkj.easypanel.host wss://saas-chatwoot.ucpvkj.easypanel.host",
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval https://saas-chatwoot.ucpvkj.easypanel.host' https://challenges.cloudflare.com",
+  "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://saas-chat.ucpvkj.easypanel.host https://saas-chatwoot.ucpvkj.easypanel.host wss://saas-chatwoot.ucpvkj.easypanel.host https://challenges.cloudflare.com",
+  "frame-src 'self' https://challenges.cloudflare.com",
   "upgrade-insecure-requests",
 ].join("; ");
 

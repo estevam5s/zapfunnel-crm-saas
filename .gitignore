@@ -1,27 +1,22 @@
-# v0 sandbox internal files
-__v0_runtime_loader.js
-__v0_devtools.tsx
-__v0_jsx-dev-runtime.ts
-.snowflake/
-.v0-trash/
-.vercel/
-
-# Environment variables
-.env*.local
-
-# Common ignores
-node_modules
+node_modules/
 .next/
+.env
+.env.*
+!.env.example
+.vercel/
+dist/
+build/
+out/
+.turbo/
+*.tsbuildinfo
 .DS_Store
-.vercel
-
-# segredos
+.sec-scan/
 supabase.txt
-.env.local
-
-SECURITY-REPORT.md
-security-report.json
-
-# macOS FAT junk
-._*
-.DS_Store
+env.txt
+.env.txt
+secrets.txt
+credentials.txt
+*.pem
+*.key
+creds.txt
+keys.txt

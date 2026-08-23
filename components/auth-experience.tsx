@@ -2,6 +2,7 @@
 /* eslint-disable @next/next/no-img-element */
 import React, { useEffect, useRef, useState } from "react";
 import { Eye, EyeOff, Loader2, ArrowLeft, Check, X, ShieldCheck } from "lucide-react";
+import { loadTurnstile, ensureHuman, TURNSTILE_SITE_KEY } from "../lib/turnstile-client";
 
 export type Testimonial = { avatarSrc: string; name: string; handle: string; text: string };
 
@@ -134,6 +135,8 @@ export default function AuthExperience(props: Props) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  useEffect(() => { loadTurnstile(); }, []);
+
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
@@ -144,6 +147,8 @@ export default function AuthExperience(props: Props) {
       if (pass !== pass2) return setError("As senhas não coincidem.");
       if (!accepted) { setShowTerms(true); return; }
     }
+    const human = await ensureHuman();
+    if (!human.ok) return setError(human.reason ?? "Verificação anti-robô falhou.");
     setLoading(true);
     try {
       const err = isReg
@@ -259,6 +264,10 @@ export default function AuthExperience(props: Props) {
             )}
 
             {error && <p className="ax-el rounded-xl border border-red-500/30 bg-red-500/10 px-3.5 py-2.5 text-sm text-red-300">{error}</p>}
+
+            {TURNSTILE_SITE_KEY && (
+              <div className="ax-el ax-d8 cf-turnstile" data-sitekey={TURNSTILE_SITE_KEY} data-theme="dark" data-language="pt-br" data-size="flexible" />
+            )}
 
             <button disabled={loading} type="submit"
               className="ax-el ax-d8 flex w-full items-center justify-center gap-2 rounded-2xl py-3.5 text-sm font-semibold text-white transition hover:opacity-90 disabled:opacity-60"
